@@ -119,7 +119,7 @@ require 'db_connection.php';
     </style>
 </head>
 <body>
-    <!-- شريط التنقل -->
+   
     <nav>
         <a href="index.php">Home</a>
         <a href="search.php">Search</a>
