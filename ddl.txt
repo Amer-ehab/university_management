@@ -1,0 +1,67 @@
+CREATE TABLE `Faculty` (
+  `Name` varchar(100) NOT NULL,
+  `Email` varchar(100) DEFAULT NULL,
+  `Phone` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`Name`)
+) ;
+
+CREATE TABLE `Department` (
+  `DepartmentName` varchar(255) NOT NULL,
+  `FacName` varchar(255) NOT NULL,
+  PRIMARY KEY (`FacName`,`DepartmentName`),
+  UNIQUE KEY `DepartmentName` (`DepartmentName`),
+  CONSTRAINT `Department_ibfk_1` FOREIGN KEY (`FacName`) REFERENCES `Faculty` (`Name`) ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+CREATE TABLE `Student` (
+  `StudentID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(100) DEFAULT NULL,
+  `Email` varchar(100) DEFAULT NULL,
+  `Phone` varchar(20) DEFAULT NULL,
+  `Address` varchar(100) DEFAULT NULL,
+  `DateOfBirth` date DEFAULT NULL,
+  `FacName` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`StudentID`),
+  KEY `fk_facname` (`FacName`),
+  CONSTRAINT `fk_facname` FOREIGN KEY (`FacName`) REFERENCES `Faculty` (`Name`)
+);
+
+
+CREATE TABLE `Course` (
+  `CourseID` int(11) NOT NULL AUTO_INCREMENT,
+  `CourseName` varchar(100) DEFAULT NULL,
+  `Credits` int(11) DEFAULT NULL,
+  `Smester` varchar(255) DEFAULT NULL,
+  `FacName` varchar(255) NOT NULL,
+  `Department` varchar(255) NOT NULL,
+  PRIMARY KEY (`CourseID`),
+  KEY `fk_faculty` (`FacName`),
+  KEY `fk_department` (`Department`),
+  CONSTRAINT `fk_faculty` FOREIGN KEY (`FacName`) REFERENCES `Faculty` (`Name`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+
+CREATE TABLE `Enrollment` (
+  `StudentID` int(11) NOT NULL,
+  `CourseID` int(11) NOT NULL,
+  `EnrollmentDate` date DEFAULT NULL,
+  PRIMARY KEY (`StudentID`,`CourseID`),
+  KEY `fk_course` (`CourseID`),
+  CONSTRAINT `Enrollment_ibfk_1` FOREIGN KEY (`StudentID`) REFERENCES `Student` (`StudentID`),
+  CONSTRAINT `Enrollment_ibfk_2` FOREIGN KEY (`CourseID`) REFERENCES `Course` (`CourseID`),
+  CONSTRAINT `fk_course` FOREIGN KEY (`CourseID`) REFERENCES `Course` (`CourseID`),
+  CONSTRAINT `fk_student` FOREIGN KEY (`StudentID`) REFERENCES `Student` (`StudentID`)
+);
+
+
+
+CREATE TABLE `Grade` (
+  `StudentID` int(11) NOT NULL,
+  `CourseID` int(11) NOT NULL,
+  `Grade` char(2) DEFAULT NULL,
+  PRIMARY KEY (`StudentID`,`CourseID`),
+  KEY `CourseID` (`CourseID`),
+  CONSTRAINT `Grade_ibfk_1` FOREIGN KEY (`StudentID`) REFERENCES `Student` (`StudentID`),
+  CONSTRAINT `Grade_ibfk_2` FOREIGN KEY (`CourseID`) REFERENCES `Course` (`CourseID`)
+);
